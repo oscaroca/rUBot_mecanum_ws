@@ -1,6 +1,7 @@
 obstacle_range: 3.0
 raytrace_range: 3.5
-#robot_mecanum
+#robot_mecanum explicaciones en la libreta
+
 footprint: [[-0.14, -0.12], [-0.14, 0.12], [0.14, 0.12], [0.14, -0.12]]
 
 inflation_radius: 1.0
