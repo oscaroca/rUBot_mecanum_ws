@@ -1,7 +1,7 @@
 <launch>
-  <!-- Robot model to match with that of Gazebo or the physical robot -->
+  <!-- Robot model to match with that of Gazebo or the physical robot. Cargamos el modleo del robooot -->
   <arg name="model" default="rubot_mpuig.urdf" />
-  <!-- More arguments -->
+  <!-- More arguments e decimos el mapa -->
   <arg name="multi_robot_name" default=""/>
   <arg name="map_file" default="$(find rubot_slam)/maps/project3_map.yaml"/>
   <arg name="open_rviz" default="true"/>
@@ -18,13 +18,13 @@
   <!-- Joint state publisher -->
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>
 
-  <!-- Map server -->
+  <!-- Map server - leer el mapa-->
   <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
 
-  <!-- AMCL -->
+  <!-- AMCL nodo para posicion localizar -->
   <include file="$(find rubot_slam)/launch/amcl.launch"/>
 
-  <!-- move_base -->
+  <!-- move_base conociendo la posiicion actual y la de destino, mover el robot en base a unos parametros(carpeta param)-->
   <include file="$(find rubot_slam)/launch/move_base.launch">
     <arg name="move_forward_only" value="$(arg move_forward_only)"/>
   </include>
