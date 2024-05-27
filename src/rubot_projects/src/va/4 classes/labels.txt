@@ -1,0 +1,5 @@
+0 Derecha
+1 Izquierda
+2 Stop
+3 Ceda
+4 Nothing

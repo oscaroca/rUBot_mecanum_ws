@@ -1,0 +1,4 @@
+0 Flecha
+1 Stop
+2 Ceda
+3 Nothing
