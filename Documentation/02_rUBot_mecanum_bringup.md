@@ -467,7 +467,7 @@ This is an exemple:
 The first step in robotics is to bringup the rUBot mecanum robot in our generated virtual world. This means:
 - Open Gazebo with the designed virtual world
 - spawn our robot in the designed virtual world 
-- and opened Rviz to see the topic messages.
+- and open Rviz to see the topic messages.
 
 This is defined in "rubot_bringup_sw.launch" file. 
 ``` shell
@@ -477,7 +477,7 @@ roslaunch rubot_mecanum_description rubot_bringup_sw.launch
 
 >Careful:
 - we have included in launch file: gazebo rubot spawn and rviz visualization 
-- Verify in rviz you have to change the fixed frame to "odom" frame
+- Verify in rviz you have in fixed frame the "odom" frame
 
 Now we are ready to control our robot in this virtual environment!
 
@@ -492,14 +492,14 @@ You will have to:
   - Modify the "base_scan" link and joint to take into account the lidar orientation in our robot
 - Design a custom virtual world using the wooden model parts
 
-To verify the final bringup, create a new "rubot_bringup_sw_custom.launch" file and type:
+To verify the final bringup, create a new "rubot_bringup_sw_custom.launch" file with your rubot_custom.urdf and the world you have created:
 ```shell
 roslaunch rubot_mecanum_description rubot_bringup_sw_custom.launch
 ```
 ![](./Images/02_Bringup/10_rubot_number.png)
 
 Upload a zip file with:
-- Picture with gazebo and rviz
+- Picture with gazebo and rviz obtained with your custom rubot model and designed world
 - file: "rubot_custom.urdf"
 - file: "rubot_bringup_sw_custom.launch"
 
@@ -566,13 +566,13 @@ Let's see some important characteristics:
 - We need to increase the buffer size of /odom publisher because the Arduino MEGA Buffer size for messages is 512bits (not enough for Odometry messages). To perform this modification, in **ROS.h** file from the Arduino library you have to add (at the end in else case section):
   ```python
   #else
-
-    //typedef NodeHandle_<ArduinoHardware, 25, 25, 512, 512, FlashReadOutBuffer_> NodeHandle;
-    typedef NodeHandle_<ArduinoHardware, 5, 5, 1024, 1024, FlashReadOutBuffer_> NodeHandle;
-
-  #endif  
+  //typedef NodeHandle_<ArduinoHardware> NodeHandle; // default 25, 25, 512, 512
+  typedef NodeHandle_<ArduinoHardware, 5, 5, 1024, 1024> NodeHandle;
+  #endif
   ```
-
+  > In older versions the syntax was:
+  >
+  >typedef NodeHandle_<ArduinoHardware, 5, 5, 1024, 1024, FlashReadOutBuffer_> NodeHandle;
 - The default baudrate to communicate with Arduino board is 47600. I suggest to maintain the Baudrate to 57600!
   >
   >In some cases is necessary to increase it. To increase this baudrate you need in **ArduinoHardware.h** file from the Arduino >library to change this default baudrate:
@@ -600,6 +600,13 @@ Let's see some important characteristics:
   ```
   > Important!: This changes have to be made in the library files where Arduino is installed (usually in /home/arduino/libraries). This can be found when in arduino IDLE we go to settings to see the Exemples folder.
 
+Let's **upload the Arduino program: rUBot_drive_mpuig.ino** (there is a number version):
+- with filesystem manager go to Documentation/files/Arduino folder
+- Select the last program version and uncompress the file in the same folder
+- Open the main program rUBot_drive_mpuig.ino
+- verify the board is Arduino Mega and port tty/ACM0
+- upload the program to arduino board (any ROS bringup previous execution has to be closed!)
+
 When we power the arduino board, this program starts and a new node appears in the ROS environment. To test its behaviour we have to run:
 ```xml
 roscore
@@ -609,6 +616,12 @@ rostopic pub -r 10 /cmd_vel geometry_msgs/Twist '[0.5, 0, 0]' '[0, 0, 0]'
 > the port to which the Arduino is connected,is usually /dev/ttyACM0. Change it if you have another one.
 
 > The last command sends a Twist message to the robot. The wheels should be moving forward. You can try different movements by modifying the numbers inside the brackets: '[vx, vy, vz]' '[wx, wy, wz]'
+
+Graphically we have designed a **Closed loop PID CD-motor speed control**:
+
+![](./Images/02_Bringup/19_pid.png)
+
+Each wheel is turning at a precise speed defined by the inverse kinematics. The speed dynamics and steady state value is ensured by the designed PID closed loop.
 
 ### **4.2. Launch LIDAR node**
 
@@ -661,23 +674,27 @@ The objective of this session is to understand the diferent nodes we have to lau
 
 Have you something that is not working as you expected?
 
+Upload the following:
+- Picture of the RVIZ screen obtained
+- Picture with the nodes and topics obtained with the instruction rqt_graph
+
 ### **Lab Activity 2: Lidar test and final bringup HW**
 
 The objectives of this activity are:
-- Lidar test:
-  - Launch the rubot_lidar_test.launch file and verify the number of laser beams. Create a new **rubot_lidar_test_custom.launch**, including a laser_factor variable as beams/deg.
-  - Where is located the zero-index of rpLIDAR? Modify the rubot.urdf base_scan frame to take into account the rpLIDAR orientation. Create a final **rubot_custom.urdf** file you will use in the future projects.
-  - Open RVIZ and verify the position of the obstacles around the robot. Are them in the correct orientation? 
-  - create another **rplidar_rock_custom.launch** file and modify the Lidar reference-frame to the appropiate frame to see the obstacles in the correct orientation.
 - Final bringup file:
-  - Create a new **rubot_bringup_hw_rock_custom.launch** file containing:
-    - robot_custom.urdf final model
+  - Launch the **rubot_bringup_hw_rock.launch** with the previously created **rubot_custom.urdf** file.
+  - In RVIZ, verify the position of the obstacles around the robot. Are them in the correct orientation? 
+  - create another **rplidar_rock_custom.launch** file and modify the Lidar reference-frame to the appropiate frame to see the obstacles in the correct orientation.
+ - Create a new **rubot_bringup_hw_rock_custom.launch** file containing:
+    - rubot_custom.urdf final model
     - rplidar_rock_custom.launch final file
-  - Put your robot inside a real world and launch the rubot_bringup_hw_rock_custom.launch file
+- Lidar test:
+  - Put your robot inside a real world and launch the **rubot_bringup_hw_rock_custom.launch** file
+  - Launch the rubot_lidar_test.launch file and verify the number of laser beams. Create a new **rubot_lidar_test_custom.launch** and **rubot_lidar_test_custom.py**, including a laser_factor variable as beams/deg.
 
 Upload a zip file including:
-- picture of rviz screen 
-- the rubot_lidar_test_custom.launch, 
+- picture of rviz screen where you can see the lidar distances
+- the rubot_lidar_test_custom.py, 
 - rubot_custom.urdf, 
 - rplidar_rock_custom.launch, 
 - rubot_bringup_hw_rock_custom.launch 

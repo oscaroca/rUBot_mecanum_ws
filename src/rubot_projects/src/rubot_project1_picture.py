@@ -17,7 +17,7 @@ class TakePhoto:
     def callback(self, data):
         try:
             self.cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
-            # cv.putText(self.cv_image, "Image 1", (100, 290), cv.FONT_HERSHEY_TRIPLEX, 1, (0, 255, 255), 1)
+            cv.putText(self.cv_image, "Image 1", (100, 290), cv.FONT_HERSHEY_TRIPLEX, 1, (0, 255, 255), 1)
             self.image_received = True
         except CvBridgeError as e:
             rospy.logerr(e)

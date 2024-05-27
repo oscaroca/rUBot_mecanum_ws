@@ -41,25 +41,25 @@ def movebase_client():
    # Waits until the action server has started up and started listening for goals.
     client.wait_for_server()
 
-   # Creates a new goal with the MoveBaseGoal constructor
+   # Creates a new goal with the MoveBaseGoal constructor Definimos poscicion y orientacion
     goal = MoveBaseGoal()
-    orientation_z = radians(90)
-    q_x, q_y, q_z, q_w = quaternion_from_euler(0.0, 0.0, orientation_z)
+    orientation_z = radians(90) #siempre radiantes
+    q_x, q_y, q_z, q_w = quaternion_from_euler(0.0, 0.0, orientation_z) #sacar el quaternion respecto a un angulo
     goal.target_pose.header.frame_id = "map"
     goal.target_pose.header.stamp = rospy.Time.now()
    # Move 0.5 meters forward along the x axis of the "map" coordinate frame 
-    goal.target_pose.pose.position.x = 0.5
+    goal.target_pose.pose.position.x = 0.5 #Campo pose ocn la posicion y las orientaciones hay que definir el quaternido correspondiente
     goal.target_pose.pose.orientation.x = q_x
     goal.target_pose.pose.orientation.y = q_y
     goal.target_pose.pose.orientation.z = q_z
-    goal.target_pose.pose.orientation.w = q_w
+    goal.target_pose.pose.orientation.w = q_w #es el angulo
 
    # Sends the goal to the action server.
-    client.send_goal(goal)
+    client.send_goal(goal) #manda la accion
    # Waits for the server to finish performing the action.
     wait = client.wait_for_result()
    # If the result doesn't arrive, assume the Server is not available
-    if not wait:
+    if not wait: #no ha conseguido legar
         rospy.logerr("Action server not available!")
         rospy.signal_shutdown("Action server not available!")
     else:

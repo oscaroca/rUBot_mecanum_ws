@@ -58,6 +58,8 @@ The rock5b onboard is preinstalled with:
 - ROS Noetic
 - Arduino
 
+You can find the image in OneDrive: Documents/Software/ROS/Rock/rock5b_32_original.img
+
 When connected to power, it is configured to:
 - generate a hotspot "rubot_XX"
 - virtual monitor installed
@@ -68,6 +70,11 @@ To connect your PC to the Robot, we have to:
 - select the rubot hotspot:
     - SSID name: rubot_XX 
     - password "rock1234"
+
+To change the hotspot SSID, use:
+```shell
+sudo nm-connection-editor
+```
 
 ### **Using nomachine remote desktop**
 To connect your computer to the robot using Nomachine:
@@ -90,7 +97,79 @@ For a proper Display resolution in Nomachine, select: Display --> Change the siz
 
 You will have the rUBot desktop on your windows nomachine screen
 
-### **2.2. Clone a repository**
+To change the hotspot SSID, use:
+```shell
+sudo nm-connection-editor
+```
+
+### **2.2. Setup the rubot with raspberrypi4**
+
+The raspberrypi4 onboard is preinstalled with:
+- Ubuntu20.04 server 64bits
+- NoMachine remote desktop
+- ROS Noetic
+- Arduino
+
+You can find the image in OneDrive: Documents/Software/ROS/RBPi/Noetic_rbpi4.img.gz (ready for Pi Imager)
+
+When connected to power, it is configured to:
+- generate a hotspot "rubot_XX"
+- virtual monitor installed
+
+### **Robot connection from PC**
+
+To connect your PC to the Robot, we have to:
+- select the rubot hotspot:
+    - SSID name: rubot_XX 
+    - password "rUBot_Mec"
+
+
+### **Using nomachine remote desktop**
+To connect your computer to the robot using Nomachine, follow the same procedure and take into account:
+
+- user: ubuntu
+- password: ubuntu1234
+
+>You do not need a Dongle HDMI
+
+For a proper Display resolution in Nomachine, select: Display --> Change the size of remote screen
+
+You will have the rUBot desktop on your windows nomachine screen
+
+To change the hotspot SSID, use:
+```shell
+sudo nm-connection-editor
+```
+### **Using windows Xrdp remote desktop**
+To connect your computer to the robot using Xrdp, follow the instructions in: https://somebooks.es/escritorio-remoto-en-ubuntu-20-04-con-xrdp/
+
+- Install xrdp en raspberrypi4 with ssh connexion:
+```shell
+sudo apt install xrdp -y
+``` 
+- In windows PC open "Remote Desktop Connexion"
+- Use the Account data:
+  - IP: 10.42.0.1
+  - user: ubuntu
+  - password: ubuntu1234
+
+### **Extra Wifi connection**
+
+To have internet access, you can connect and install USB wireless adapter:
+https://www.amazon.es/Archer-T2U-Nano-inal%C3%A1mbrico-Escritorio/dp/B07LGSDBTF
+or 
+https://www.amazon.es/TP-Link-Archer-T2U-Nano-Adaptador/dp/B07PB1X4CN
+
+- Install the device:
+```shell
+sudo apt install dkms
+git clone https://github.com/aircrack-ng/rtl8812au.git
+cd rtl8812au
+sudo make dkms_install
+```
+You will need to shutdown the raspberrypi4 to finish the installation 
+
+### **2.3. Clone a repository**
 
 The first time you have to clone the "rUBot_mecanum_ws" repository to the home folder.
 ```shell
